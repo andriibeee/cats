@@ -27,7 +27,7 @@ services:
     environment:
       PORT: ":3000"
       MIGRATE: "TRUE"
-      DATABASE_URL: 'user=postgres password=postgres host=postgres port=5432 dbname=postgres sslmode=disable pool_max_conns=10'
+      DATABASE_URL: 'user=postgres password=postgres host=postgres port=5432 dbname=cats sslmode=disable pool_max_conns=10'
 
 volumes:
   pg_data:
