@@ -1,0 +1,536 @@
+basePath: /
+definitions:
+  dto.CreateCatDTO:
+    properties:
+      breed:
+        type: string
+      experience:
+        type: integer
+      name:
+        type: string
+      salary:
+        type: integer
+    type: object
+  dto.CreateMissionDTO:
+    properties:
+      assignee:
+        type: string
+      complete:
+        type: boolean
+      targets:
+        items:
+          $ref: '#/definitions/dto.CreateTargetDTO'
+        type: array
+    type: object
+  dto.CreateTargetDTO:
+    properties:
+      country:
+        type: string
+      name:
+        type: string
+      notes:
+        type: string
+    type: object
+  dto.UpdateCatDTO:
+    properties:
+      salary:
+        type: integer
+    type: object
+  dto.UpdateMissionDTO:
+    properties:
+      assignee:
+        type: string
+      complete:
+        type: boolean
+    type: object
+  dto.UpdateTargetDTO:
+    properties:
+      complete:
+        type: boolean
+      name:
+        type: string
+      notes:
+        type: string
+    type: object
+  entity.Cat:
+    properties:
+      breed:
+        type: string
+      experience:
+        type: integer
+      id:
+        type: string
+      name:
+        type: string
+      salary:
+        type: integer
+    type: object
+  entity.Mission:
+    properties:
+      assignee:
+        $ref: '#/definitions/entity.Cat'
+      complete:
+        type: boolean
+      id:
+        type: string
+      targets:
+        items:
+          $ref: '#/definitions/entity.Target'
+        type: array
+    type: object
+  entity.Target:
+    properties:
+      complete:
+        type: boolean
+      country:
+        type: string
+      name:
+        type: string
+      notes:
+        type: string
+    type: object
+  rest.Error:
+    properties:
+      message:
+        type: string
+    type: object
+host: 127.0.0.1:3000
+info:
+  contact: {}
+  title: Spy Cats API
+  version: "1.0"
+paths:
+  /cats:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/entity.Cat'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/rest.Error'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/rest.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/rest.Error'
+      summary: Get cats
+      tags:
+      - cats
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Create cat request
+        in: body
+        name: dto.CreateCatDTO
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateCatDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entity.Cat'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/rest.Error'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/rest.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/rest.Error'
+      summary: Create cat
+      tags:
+      - cats
+  /cats/{id}:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: Cat ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: ""
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/rest.Error'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/rest.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/rest.Error'
+      summary: Delete cat by ID
+      tags:
+      - cats
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Cat ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entity.Cat'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/rest.Error'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/rest.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/rest.Error'
+      summary: Get cat by ID
+      tags:
+      - cats
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Update cat request
+        in: body
+        name: dto.UpdateCatDTO
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateCatDTO'
+      - description: Cat ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entity.Cat'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/rest.Error'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/rest.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/rest.Error'
+      summary: Update cat by ID
+      tags:
+      - cats
+  /missions:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/entity.Mission'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/rest.Error'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/rest.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/rest.Error'
+      summary: Get missions
+      tags:
+      - mission
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Create mission request
+        in: body
+        name: dto.CreateMissionDTO
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateMissionDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entity.Mission'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/rest.Error'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/rest.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/rest.Error'
+      summary: Create mission
+      tags:
+      - mission
+  /missions/{id}:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: Mission ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: ""
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/rest.Error'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/rest.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/rest.Error'
+      summary: Delete mission by ID
+      tags:
+      - mission
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Mission ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entity.Mission'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/rest.Error'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/rest.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/rest.Error'
+      summary: Get mission by ID
+      tags:
+      - mission
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Update mission request
+        in: body
+        name: dto.UpdateMissionDTO
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateMissionDTO'
+      - description: Mission ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entity.Mission'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/rest.Error'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/rest.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/rest.Error'
+      summary: Update mission by ID
+      tags:
+      - mission
+  /missions/{id}/targets:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Create target request
+        in: body
+        name: dto.CreateTargetDTO
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateTargetDTO'
+      - description: Mission ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entity.Mission'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/rest.Error'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/rest.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/rest.Error'
+      summary: Create target
+      tags:
+      - mission
+  /missions/{id}/targets/{tid}:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: Mission ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Target Name
+        in: path
+        name: tid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entity.Mission'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/rest.Error'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/rest.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/rest.Error'
+      summary: Delete target
+      tags:
+      - mission
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Update target request
+        in: body
+        name: dto.UpdateTargetDTO
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateTargetDTO'
+      - description: Mission ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Target Name
+        in: path
+        name: tid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entity.Mission'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/rest.Error'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/rest.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/rest.Error'
+      summary: Update target
+      tags:
+      - mission
+swagger: "2.0"

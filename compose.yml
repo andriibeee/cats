@@ -1,0 +1,33 @@
+services:
+
+  postgres:
+    image: postgres:16.3
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: cats
+    restart: on-failure
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: pg_isready -U postgres -d cats
+      interval: 1s
+      timeout: 3s
+      retries: 15
+
+  app:
+    build: .
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "3000:3000"
+    environment:
+      PORT: ":3000"
+      MIGRATE: "TRUE"
+      DATABASE_URL: 'user=postgres password=postgres host=postgres port=5432 dbname=postgres sslmode=disable pool_max_conns=10'
+
+volumes:
+  pg_data:

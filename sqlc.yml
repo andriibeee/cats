@@ -1,0 +1,11 @@
+version: "2"
+sql:
+  - engine: "postgresql"
+    queries: "query.sql"
+    schema: "./migrations/*.sql"
+    gen:
+      go:
+        package: "dbgen"
+        sql_package: "pgx/v5"
+        out: "./internal/infrastructure/database/dbgen/"
+        emit_prepared_queries: true
