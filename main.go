@@ -41,7 +41,7 @@ func main() {
 
 	dbpool, err := pgxpool.New(context.Background(), db)
 	if err != nil {
-		log.Fatal("Unable to create connection pool: %v\n", err)
+		log.Fatalf("Unable to create connection pool: %v\n", err)
 	}
 	defer dbpool.Close()
 
@@ -67,7 +67,7 @@ func main() {
 	cs := service.NewCatsService(dbpool)
 	ms := service.NewMissionsService(dbpool)
 
-	cuc := usecase.NewCatsUseCase(bs, cs)
+	cuc := usecase.NewCatsUseCase(api.NewBreedsWithFallbackService(bs), cs)
 	muc := usecase.NewMissionsUseCase(ms, cs)
 
 	if err := rest.New(cuc, muc).Run(port); err != nil {

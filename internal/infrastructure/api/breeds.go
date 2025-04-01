@@ -1,6 +1,7 @@
 package api
 
 import (
+	"cats/internal/domain/service"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -12,7 +13,7 @@ type BreedsService struct {
 	client *http.Client
 }
 
-func NewBreedsService() *BreedsService {
+func NewBreedsService() service.BreedService {
 	return &BreedsService{
 		client: &http.Client{
 			Timeout: time.Second * 5,
