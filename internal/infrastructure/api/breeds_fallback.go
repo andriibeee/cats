@@ -17,9 +17,6 @@ func NewBreedsWithFallbackService(root service.BreedService) service.BreedServic
 	var st gobreaker.Settings
 	st.Name = "Breeds Service"
 	st.ReadyToTrip = func(counts gobreaker.Counts) bool {
-		if counts.Requests == 0 {
-			return false
-		}
 		failureRatio := float64(counts.TotalFailures) / float64(counts.Requests)
 		return counts.Requests >= 3 && failureRatio >= 0.6
 	}
@@ -33,15 +30,15 @@ func NewBreedsWithFallbackService(root service.BreedService) service.BreedServic
 func (b *BreedsWithFallbackService) CheckBreed(ctx context.Context, name string) (bool, error) {
 	res, err := b.cb.Execute(func() (bool, error) {
 		r, err := b.root.CheckBreed(ctx, name)
-		if err == nil {
-			b.cache[name] = r
+		if err == nil && r {
+			b.cache[name] = true
 		}
 		return r, err
 	})
 	if err != nil {
 		if errors.Is(err, gobreaker.ErrOpenState) {
-			if result, ok := b.cache[name]; ok {
-				return result, nil
+			if _, ok := b.cache[name]; ok {
+				return true, nil
 			}
 		}
 		return false, err
